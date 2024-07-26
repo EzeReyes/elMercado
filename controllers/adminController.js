@@ -62,7 +62,7 @@ const updateProductById = (req, res) => {
     const { Nombre, Descripcion, Precio, Stock } = req.body;
 
     // Consulta para actualizar el producto
-    const updateProducto = 'UPDATE Productos SET Nombre = ?, Descripcion = ?, Precio = ?, Stock = ? WHERE Producto_ID = ?';
+    const updateProducto = 'UPDATE productos SET Nombre = ?, Descripcion = ?, Precio = ?, Stock = ? WHERE Producto_ID = ?';
 
     db.query(updateProducto, [Nombre, Descripcion, Precio, Stock, id], (err, result) => {
         if (err) {
@@ -90,7 +90,7 @@ const crearProducto = (req, res) => {
 
     const nombre = req.file.filename; // Cambiado a `req.file.filename` para obtener el nombre correcto del archivo subido.
 
-    const sqlCreate = 'INSERT INTO Productos (Nombre, Descripcion, Precio, Stock, Foto_Url) VALUES (?, ?, ?, ?, ?)';
+    const sqlCreate = 'INSERT INTO productos (Nombre, Descripcion, Precio, Stock, Foto_Url) VALUES (?, ?, ?, ?, ?)';
     db.query(sqlCreate, [Nombre, Descripcion, Precio, Stock, nombre], (err, result) => {
         if (err) {
             console.error('Error al insertar datos en la base de datos: ', err.message);
@@ -118,8 +118,8 @@ const crearView = (req, res) => {
 
 const eliminarProducto = (req, res) => {
     const { id } = req.body;
-    const sql = 'SELECT * FROM Productos WHERE Producto_ID = ?';
-    const sqlDelete = 'DELETE FROM Productos WHERE Producto_ID = ?';
+    const sql = 'SELECT * FROM productos WHERE Producto_ID = ?';
+    const sqlDelete = 'DELETE FROM productos WHERE Producto_ID = ?';
 
     console.log(id);
 
@@ -149,7 +149,7 @@ const eliminarProducto = (req, res) => {
 const users = (req, res) => {
     const csrfToken = req.csrfToken();
     
-    const sql = "SELECT * FROM Users WHERE role != 'admin'";
+    const sql = "SELECT * FROM users WHERE role != 'admin'";
     db.query(sql, (err, results) => {
             if(err) throw err;
             res.render('admin/users', { results, csrfToken});
@@ -161,7 +161,7 @@ const users = (req, res) => {
         const csrfToken = req.csrfToken();
     
         const id = req.params.id;
-        const sqlForID = 'SELECT * FROM `Users` WHERE `Cliente_ID` = ?';
+        const sqlForID = 'SELECT * FROM `users` WHERE `Cliente_ID` = ?';
         
         // Consulta para obtener el producto por ID
         db.query(sqlForID, [id], (err, resultsForId) => {
@@ -200,7 +200,7 @@ const users = (req, res) => {
             PasswordHass = req.body['stored-pass'];
         }
         
-        const sqlUpdate = 'UPDATE Users SET Foto_user = ?, Nombre = ?, Apellido = ?, Direccion = ?, Telefono = ?, Email = ?, Password = ? WHERE Cliente_ID = ?';
+        const sqlUpdate = 'UPDATE users SET Foto_user = ?, Nombre = ?, Apellido = ?, Direccion = ?, Telefono = ?, Email = ?, Password = ? WHERE Cliente_ID = ?';
     
             db.query(sqlUpdate, [updatePhoto, Nombre, Apellido, Direccion, Telefono, Email, PasswordHass, id], (err) => {
                 if (err) {
