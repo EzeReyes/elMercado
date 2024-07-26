@@ -13,7 +13,7 @@ const getAllProducts= (views) => (req, res) => {
     const user = req.session.user; // Usuario autenticado
     delete req.session.message;
 
-    const sql = 'SELECT * FROM Productos';
+    const sql = 'SELECT * FROM productos';
     db.query(sql, (err, results) => {
         if(err) throw err;
         res.render(views, { results, message, user, csrfToken});
