@@ -44,7 +44,7 @@ const login = (req, res) => {
         return res.status(400).json({ error: 'Email y contraseña son requeridos' });
     }
 
-    const sql = 'SELECT Cliente_ID, Email, Password, Nombre, Apellido, role FROM Users WHERE Email = ?';
+    const sql = 'SELECT Cliente_ID, Email, Password, Nombre, Apellido, role FROM users WHERE Email = ?';
 
     db.query(sql, [Email], (err, results) => {
         if (err) {
