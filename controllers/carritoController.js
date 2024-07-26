@@ -10,8 +10,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const mostrarCarrito = (req, res) => {
     const csrfToken = req.csrfToken();
     const Cliente_ID = req.session.Cliente_ID 
-    const sqlCarrito = 'SELECT p.Producto_ID, p.Nombre, p.Descripcion, p.Precio, p.Foto_Url, c.Cantidad FROM Carrito c JOIN Productos p ON c.Producto_ID = p.Producto_ID WHERE c.Cliente_ID = ?';
-    const sqlTotal = 'SELECT SUM(p.Precio * c.Cantidad) AS total FROM Carrito c JOIN Productos p ON c.Producto_ID = p.Producto_ID WHERE c.Cliente_ID = ?';
+    const sqlCarrito = 'SELECT p.Producto_ID, p.Nombre, p.Descripcion, p.Precio, p.Foto_Url, c.Cantidad FROM carrito c JOIN productos p ON c.Producto_ID = p.Producto_ID WHERE c.Cliente_ID = ?';
+    const sqlTotal = 'SELECT SUM(p.Precio * c.Cantidad) AS total FROM carrito c JOIN productos p ON c.Producto_ID = p.Producto_ID WHERE c.Cliente_ID = ?';
 
     db.query(sqlCarrito, [Cliente_ID], (err, resultsCarrito) => {
         if (err) throw err;
@@ -33,7 +33,7 @@ const eliminarProducto = (req, res) => {
     const { id } = req.body;
     const sqlGetQuantity = 'SELECT Cantidad FROM carrito WHERE Producto_ID = ?';
     const sqlDelete = 'DELETE from carrito WHERE Producto_ID = ?';
-    const sqlUpdateStock = 'UPDATE Productos SET Stock = Stock + ? WHERE Producto_ID = ?';
+    const sqlUpdateStock = 'UPDATE productos SET Stock = Stock + ? WHERE Producto_ID = ?';
 
 db.query(sqlGetQuantity, [id], (err, getResult) => {
     if (err) {

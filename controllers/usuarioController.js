@@ -155,7 +155,7 @@ const register = (req, res) => {
 
     PasswordRegistro = bcrypt.hashSync(PasswordRegistro, 8);
 
-    const sql = 'INSERT INTO Users (Nombre, Direccion, Telefono, Email, Password, Apellido) VALUES(?, ?, ?, ?, ?, ?)';
+    const sql = 'INSERT INTO users (Nombre, Direccion, Telefono, Email, Password, Apellido) VALUES(?, ?, ?, ?, ?, ?)';
 
     db.query(sql, [Nombre, Direccion, Telefono, EmailRegistro, PasswordRegistro, Apellido], async (err, result) => {
         if (err) {
@@ -172,7 +172,7 @@ const register = (req, res) => {
         res.cookie('auth_token', token, { httpOnly: true, secure: true });
 
         // Insertando el token en la base de datos
-        const updateSql = 'UPDATE Users SET token = ? WHERE Cliente_ID = ?';
+        const updateSql = 'UPDATE users SET token = ? WHERE Cliente_ID = ?';
             db.query(updateSql, [token, ID], (err, result) => {
                 
                 if (err) {
@@ -208,7 +208,7 @@ const  confirmar = (req, res, next) => {
     const csrfToken = req.csrfToken();
     const token = req.params.token;
     // Verificar si el token es válido
-    const sqlForToken = 'SELECT * FROM Users WHERE Token = ?';
+    const sqlForToken = 'SELECT * FROM users WHERE Token = ?';
     db.query(sqlForToken, [token], (err, result) => {
         const user = result[0];
 
@@ -221,7 +221,7 @@ if(result.length===0) {
 
     // Confirmar la cuenta
 
-    const sqlModifyToken = 'UPDATE Users SET Token = null, Confirmado = true WHERE Token = ?';
+    const sqlModifyToken = 'UPDATE users SET Token = null, Confirmado = true WHERE Token = ?';
 
     db.query(sqlModifyToken, [token], (err, result) => {
         if (err) {
@@ -273,7 +273,7 @@ const resetPassword = (req, res) => {
 
     const { Email } = req.body;
 
-    const sql = 'SELECT Cliente_ID, Email, Password, Nombre FROM Users WHERE Email = ?';
+    const sql = 'SELECT Cliente_ID, Email, Password, Nombre FROM users WHERE Email = ?';
 
     db.query(sql, [Email], (err, results) => {
         if (err) {
@@ -298,7 +298,7 @@ const resetPassword = (req, res) => {
     
         // Insertando el token en la base de datos
 
-        const updateSql = 'UPDATE Users SET token = ? WHERE Cliente_ID = ?';
+        const updateSql = 'UPDATE users SET token = ? WHERE Cliente_ID = ?';
         db.query(updateSql, [token, Cliente_ID], (err, result) => {
             
             if (err) {
@@ -322,7 +322,7 @@ const resetPassword = (req, res) => {
 
 const comprobarToken = (req, res)  => {
     const { token } = req.params;
-    const sqlToken = 'SELECT * FROM Users WHERE Token = ?';
+    const sqlToken = 'SELECT * FROM users WHERE Token = ?';
     const csrfToken = req.csrfToken();
 
     db.query(sqlToken, [token], (err, result) => {
@@ -361,8 +361,8 @@ const nuevoPassword2 = async (req, res) => {
     // Hash de la nueva contraseña
     password = bcrypt.hashSync(password, 8);
 
-    const sqlSelect = 'SELECT * FROM Users WHERE Token = ?';
-    const sqlUpdate = 'UPDATE Users SET Token = null, Confirmado = true, Password = ? WHERE Token = ?';
+    const sqlSelect = 'SELECT * FROM users WHERE Token = ?';
+    const sqlUpdate = 'UPDATE users SET Token = null, Confirmado = true, Password = ? WHERE Token = ?';
 
     try {
         // Deshabilitar el modo seguro
@@ -403,7 +403,7 @@ const cargarFotoADB = (req, res) => {
     }
     const foto = req.file.filename; // Cambiado a `req.file.filename` para obtener el nombre correcto del archivo subido.
 
-    db.query('UPDATE Users SET foto_user = ? WHERE Cliente_ID = ?', [foto, Cliente_ID], (err) => {
+    db.query('UPDATE users SET foto_user = ? WHERE Cliente_ID = ?', [foto, Cliente_ID], (err) => {
         if (err) {
             console.error('Error inserting into the database:', err);
             return res.status(500).send('Error inserting into the database');
@@ -415,7 +415,7 @@ const cargarFotoADB = (req, res) => {
     const perfil = (req, res) => {
         const csrfToken = req.csrfToken();
         const Cliente_ID = req.session.Cliente_ID;
-        const sqlUser = 'SELECT * FROM Users WHERE Cliente_ID = ?';
+        const sqlUser = 'SELECT * FROM users WHERE Cliente_ID = ?';
 
         db.query(sqlUser, [Cliente_ID], (err, results) => {
             if(err) {
@@ -429,7 +429,7 @@ const cargarFotoADB = (req, res) => {
     const getEditar = (req, res) => {
         const csrfToken = req.csrfToken();
         const Cliente_ID = req.session.Cliente_ID;
-        const sqlUser = 'SELECT * FROM Users WHERE Cliente_ID = ?';
+        const sqlUser = 'SELECT * FROM users WHERE Cliente_ID = ?';
         db.query(sqlUser, [Cliente_ID], (err, resultsSelect) => {
             if (err) {
                 return res.status(500).json({ error: 'Error al obtener los datos del usuario' });
@@ -455,7 +455,7 @@ const cargarFotoADB = (req, res) => {
 
         const PasswordHass = bcrypt.hashSync(Password, 8);
 
-        const sqlUpdate = 'UPDATE Users SET Foto_user = ?, Nombre = ?, Apellido = ?, Direccion = ?, Telefono = ?, Email = ?, Password = ? WHERE Cliente_ID = ?';
+        const sqlUpdate = 'UPDATE users SET Foto_user = ?, Nombre = ?, Apellido = ?, Direccion = ?, Telefono = ?, Email = ?, Password = ? WHERE Cliente_ID = ?';
     
             db.query(sqlUpdate, [updatePhoto, Nombre, Apellido, Direccion, Telefono, Email, PasswordHass, Cliente_ID], (err) => {
                 if (err) {

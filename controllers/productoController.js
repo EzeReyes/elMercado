@@ -26,7 +26,7 @@ const getProductForSearch = (req, res) => {
 
     console.log('Valor de la busqueda:', busqueda);
     
-        const sql = 'SELECT * FROM Productos WHERE Nombre LIKE (?)';
+        const sql = 'SELECT * FROM productos WHERE Nombre LIKE (?)';
         const queryParam = `%${busqueda}%`;
         
         db.query(sql, [queryParam], (err, resultsBusq) => {
