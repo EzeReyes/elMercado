@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Orden</title>
+</head>
+<body>
+    <h1>Detalle de la Orden</h1>
+    <ul>
+        <% results.forEach(result => { %>
+            <li>
+                <img src="<%= result.Foto_Url %>" alt="<%= result.Nombre %>" />
+                <p>Nombre: <%= result.Nombre %></p>
+                <p>Precio: <%= result.Precio %></p>
+                <p>Cantidad: <%= result.Cantidad %></p>
+            </li>
+        <% }); %>
+    </ul>
+</body>
+</html>

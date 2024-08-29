@@ -15,6 +15,8 @@ const contactoRoute = require('../routes/contactoRoute');
 const carritoRoute = require('../routes/carritoRoute');
 const usuarioRoute = require('../routes/usuarioRoute');
 const adminRoute = require('../routes/adminRoute');
+const paymentRoute = require('../routes/paymentRoute');
+
 
 // Middleware
 app.use(express.static('public'));
@@ -68,12 +70,17 @@ app.use((err, req, res, next) => {
 
 // Router
 app.use('/', ProductosRoute);
+app.use('/', carritoRoute);
 app.use('/pages', sobreNosotrosRoute);
 app.use('/pages', contactoRoute);
 app.use('/pages', carritoRoute);
 app.use('/auth', usuarioRoute);
 app.use('/user', usuarioRoute);
 app.use('/admin', adminRoute);
+app.use('/', paymentRoute);
+app.use('/payment', paymentRoute);
+
+
 
 // Configuración del motor de vistas
 app.set('view engine', 'ejs');

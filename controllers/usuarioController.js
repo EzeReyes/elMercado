@@ -4,8 +4,8 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const config = require('../config/config');
 const { emailRegistro, emailOlvidePassword} = require('../helpers/emails');
-const { users } = require('./adminController');
-
+const moment = require('moment');
+moment.locale('es'); // Configura el idioma
 
 
 // ------------------------------------------------------------------------------------------------------------------
@@ -465,6 +465,71 @@ const cargarFotoADB = (req, res) => {
                 res.json({ message: 'Usuario modificado' });
             });
         }
+
+        const getHistorialCompras = (req, res) => {
+            const csrfToken = req.csrfToken();
+            const { orderId } = req.body;
+
+            const Cliente_ID = req.session.Cliente_ID;
+
+            // TRAER DATOS DE ORDEN DE COMPRA donde el estado de la compra se aprobada y el cliente_ID sea igual al de la sesión iniciada.
+
+            const sqlOrden = `SELECT  Status, Payment_type, Date_Created, Order_ID FROM orders WHERE Status="approved" AND Cliente_ID = ?`;
+                    
+            // TRAER DATOS DEL O LOS PRODUCTOS COMPRADOS EN LOS CUALES SE COINCIDA EL PRODUCTO_ID DE LAS TABLAS PRODUCTOS Y ORDER_ITEMS Y LA CANTIDAD DESDE LA ORDEN DE COMPRA DONDE EL CLIENTE_ID SEA IGUAL A LA SESIÓN INICIADA.
+
+            const sqlDetalle = `SELECT p.Nombre, p.Precio, oi.Cantidad, p.Foto_Url FROM productos p JOIN order_items oi ON p.Producto_ID = oi.Producto_ID JOIN orders o ON oi.Order_ID = o.Order_ID WHERE o.order_ID = ? `;
+
+            db.query(sqlOrden,  [Cliente_ID], (err, results) => {
+                if (err) {
+                    console.error('Error consultando el historial de compras:', err);
+                    return res.status(500).send('Error consultando el historial de compras en la base de datos');
+                }
+           
+            db.query(sqlDetalle,  [orderId], (err, resultsDetalle) => {
+                if (err) {
+                    console.error('Error consultando el detalle de  la compra:', err);
+                    return res.status(500).send('Error consultando el historial de compras en la base de datos');
+                }
+                
+                
+                results.forEach(compra => {
+                    compra.fecha = moment(compra.Date_Created).format('dddd, D [de] MMMM [de] YYYY HH:mm');
+                });
+
+                
+
+                console.log(results, resultsDetalle)
+                res.render('user/historial-compras', { compras: results, detalle: resultsDetalle, csrfToken });
+            });
+        })
+        };
+
+        // const order_ID = (req, res) => {
+        //     const csrfToken = req.csrfToken();
+
+        //     const { orderId } = req.body;
+
+        //     const sqlDetalle = `SELECT p.Nombre, p.Precio, oi.Cantidad, p.Foto_Url FROM productos p JOIN order_items oi ON p.Producto_ID = oi.Producto_ID JOIN orders o ON oi.Order_ID = o.Order_ID WHERE o.order_ID = ? `;
+        //     db.query(sqlDetalle, [orderId], (err, results) => {
+        //         if (err) {
+        //             console.error('Error consultando el detalle de la orden:', err);
+        //             return res.status(500).send('Error consultando el detalle de la orden:');
+        //         }
+        //         console.log('detalle de orden n°', orderId, results)
+        //         // res.render('user/detalle', 
+        //         //     {results: results,
+        //         //     csrfToken
+        //         });
+        //     }
+
+
+
+        
+
+            // SELECT * FROM orders WHERE Status="approved" AND Cliente_ID=38;
+
+            // SELECT p.Nombre, p.Precio, oi.Cantidad, p.Foto_Url FROM productos p JOIN order_items oi ON p.Producto_ID = oi.Producto_ID JOIN orders o ON oi.Order_ID = o.Order_ID WHERE o.Cliente_ID = 38;
     
         // const funcionQueHashea = (p) => {
         //     const passHass = bcrypt.hashSync(p, 8);
@@ -489,5 +554,6 @@ module.exports = {
     perfil,
     getEditar,
     cargarFotoADB,
-    editar
+    editar, 
+    getHistorialCompras
 }

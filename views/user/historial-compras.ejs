@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/images/logoTuMercado.png" type="image/x-icon">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Historial de Compras</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #ffffff;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header .logo img {
+            height: 40px;
+        }
+
+        .header .logoTitulo {
+            font-size: 24px;
+            margin-left: 10px;
+            color: #333;
+        }
+
+        .title-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .title-flex h1 {
+            margin: 0;
+        }
+
+        .back {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            padding: 20px;
+        }
+
+        .div-img {
+            height: auto;
+            width: auto;
+        }
+
+        .approved {
+            background-color: #0fef0f;
+            width: fit-content;
+            padding: 2px;
+            border-radius: 2px;
+            color: white;
+            border: 1px solid white;
+            margin: 10px;
+        }
+
+        .div-img img {
+            height: 100px;
+            width: auto;
+        }
+
+        .grid div {
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .grid-container {
+            padding: 20px;
+        }
+        .oculto {
+            display: none;
+        }
+        main {
+            display: block;
+            color: black;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+        }
+    </style>
+</head>
+<header class="header">
+    <img class="imgCruz" src="/images/x-symbol-svgrepo-com.svg" alt="cruxSvg"/>
+    <button class="buttonMenu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5.5 0 0 1 .5-.5h10a.5.5.0 0 1 0 1H3a.5.5.0 0 1-.5-.5z"/>
+        </svg>
+    </button>
+    <nav class="nav activo">
+        <ul>
+            <div class="logo">
+                <a href="/">
+                    <img src="/images/logoTuMercado.png" alt="TuMercado-imagen">
+                    <span class="logoTitulo">TuMercado</span>
+                </a>
+            </div>
+        </ul>
+    </nav>
+</header>
+<body>
+    <main>
+        <div class="title-flex">
+            <h1>Compras realizadas</h1>
+            <a href="/user/perfil" class="back">Volver</a>
+        </div>
+        <% compras.forEach(compra => { %>
+            <div>
+            <a href="#" class="mostrarSeccion" data-id="<%= compra.Order_ID %>">Numero de orden de compra: <%= compra.Order_ID %></a>
+            <div id="seccionOculta_<%= compra.Order_ID %>" class="oculto">
+                <div>
+                    <p class="approved"><%= compra.Status %></p>
+                    <p><%= compra.fecha %></p>
+                </div>
+                <form method="POST" action="/user/historial-compras/?_csrf=<%= csrfToken %>">
+                    <input type="hidden" name="_csrf" value="<%=csrfToken  %>" >
+                    <input type="hidden" name="orderId"  value="<%= compra.Order_ID %>">
+                    <button type="submit">ver más</button>
+                </form>
+            </div>
+            </div>
+        <% }); %>
+    
+            <div class="grid-container">
+                <div class="grid">
+                    <div>Nombre</div>
+                    <div>Precio</div>
+                    <div>Cantidad</div>
+                    <div>Imagen del Producto</div>
+                </div>
+                <% detalle.forEach(detalle => { %>
+                <div class="grid">
+                    <div><%= detalle.Nombre %></div>
+                    <div><%= detalle.Precio %></div>
+                    <div><%= detalle.Cantidad %></div>
+                    <div class="div-img"><img src="<%= detalle.Foto_Url %>" alt="imagen de <%= detalle.Nombre %>"></div>
+                </div>
+                <% }); %>
+            </div>
+    </main>
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Manejar los enlaces de mostrar sección
+    document.querySelectorAll('.mostrarSeccion').forEach(function(enlace) {
+        enlace.addEventListener('click', function(event) {
+            event.preventDefault();
+            const id = enlace.getAttribute('data-id');
+            const seccion = document.getElementById(`seccionOculta_${id}`);
+            if (seccion) {
+                seccion.style.display = seccion.style.display === 'block' ? 'none' : 'block';
+            }
+        });
+    });
+    });
+</script>
+</html>

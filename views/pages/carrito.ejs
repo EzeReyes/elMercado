@@ -14,9 +14,7 @@
             <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
         </svg>
     </button>
-
     <nav class="nav activo">
-        
         <ul>
             <div class="logo">
                 <a href="/">
@@ -39,26 +37,31 @@
         <div class="mainCarrito">
             <h2>TU COMPRA</h2>
             <section class="carritoDeCompra">
-                    <!-- Más productos en el carrito -->
-                    <% resultsCarrito.forEach(producto => { %>
-                        <div class="carrito-item">
-                            <img class="imgItem" src="<%= producto.Foto_Url %>" alt="<%= producto.Nombre %>"/>
-                            <h6><%= producto.Nombre %></h6>
-                            <h6><%= producto.Precio %></h6>
-                            <h6><%= producto.Cantidad %></h6>
-                            <form id="form-<%= producto.Producto_ID %>" method="POST">
-                                <input type="hidden" name="_csrf" value="<%= csrfToken %>" >
-                                <input type="hidden" name="id" value="<%= producto.Producto_ID %>">
-                                <button class="buttonEliminar" type="submit">Eliminar</button>
-                            </form>
-                        </div>
-                        <% }); %>
+                    <% if(!resultsCarrito || resultsCarrito.length === 0) { %>
+                        <p><%= "Tu carrito está vacio" %></p>
+                    <% } else { %>
+                        <% resultsCarrito.forEach(producto => { %>
+                            <div class="carrito-item">
+                                <img class="imgItem" src="<%= producto.Foto_Url %>" alt="<%= producto.Nombre %>"/>
+                                <h6><%= producto.Nombre %></h6>
+                                <h6><%= producto.Precio %></h6>
+                                <h6><%= producto.Cantidad %></h6>
+                                <form id="form-<%= producto.Producto_ID %>" method="POST" action="/carrito">
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                    <input type="hidden" name="id" value="<%= producto.Producto_ID %>">
+                                    <button class="buttonEliminar" type="submit">Eliminar</button>
+                                </form>
+                            </div>
+                        <% }) %>
                         <div>
                             <h6>Total a Pagar: $<%= total %></h6>
-                            <button class="finalizar-compra">Finalizar Compra</button>
+                            <form method="get" action="/create-payment-link">
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                <button class="finalizar-compra" type="submit">Finalizar Compra</button>
+                            </form>
                         </div>
-
-                    </section>
+                    <% } %>
+            </section>
         </div>
     </main>
     <footer>

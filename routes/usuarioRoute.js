@@ -1,6 +1,6 @@
 const express = require('express');
 const multer = require('multer');
-const { loginGet, login, registerGet, register, olvidePassword, confirmar, resetPassword, comprobarToken, validateNewPass, editar, nuevoPassword2, logout, perfil, cargarFotoADB, getEditar, confirmarGet } = require("../controllers/usuarioController");
+const { loginGet, login, registerGet, register, olvidePassword, confirmar, resetPassword, comprobarToken, validateNewPass, editar, nuevoPassword2, logout, perfil, cargarFotoADB, getEditar, confirmarGet, getHistorialCompras, order_ID } = require("../controllers/usuarioController");
 const { validateRegister, validateLogin, validateResetPass  } = require('../middlewares/validateRegister');
 const {middleware} = require('../middlewares/authMiddlewares');
 const { authenticateJWT } = require('../middlewares/authJWT');
@@ -68,6 +68,8 @@ router.get('/perfil', authenticateJWT, perfil);
 router.post('/perfil', authenticateJWT, upload.single('archivo'), cargarFotoADB);
 router.get('/editar-perfil', authenticateJWT, getEditar);
 router.post('/editar-perfil', authenticateJWT, upload.single('archivo'), editarUsuario);
+router.get('/historial-compras', getHistorialCompras);
+router.post('/historial-compras', getHistorialCompras);
 
 
 module.exports = router;

@@ -46,17 +46,17 @@
             <h1>Encontrá lo que buscas en <strong>Tu Mercado</strong></h1>
         </div>
         <div class="enlaceALogin">
-            <span><%= message %></span>
+            <span class="spanmsg"><%= message %></span>
             <a href="/pages/contacto">¿Necesitas ayuda? 📞</a>
             <% if (user) { %>
                 <a href="/user/perfil">Tu Perfil</a>
                 <!-- Botón de cierre de sesión -->
                 <form action="/logout" method="get">
-                    <button type="submit">Cerrar sesión</button>
+                    <button class="btn-logout" type="submit">Cerrar sesión</button>
                 </form>
             <% } else { %>
                 <!-- Enlace de iniciar sesión si no está autenticado -->
-                <a href="/auth/login">Inicie sesión</a>
+                <a class="btn-login" href="/auth/login">Inicie sesión</a>
             <% } %>
                 </div>
         <div class="containerArticulos">

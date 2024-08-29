@@ -175,6 +175,39 @@ header a {
     font-size: 12px;
 }
 
+.btn-logout {
+    background-color: #ff525288;
+    color: white;
+    border-radius: 2px;
+    padding: 2px;
+    transition:     background-color 2s
+}
+
+.btn-logout:hover {
+    background-color: #ff5252;
+    color: white;
+}
+
+.btn-login {
+    background-color: #61ff5288;
+    color: white;
+    border-radius: 2px;
+    padding: 2px;
+    transition: background-color 2s;
+    margin: 2px;
+}
+
+.btn-login:hover {
+    background-color: #61ff52d3;
+    color: white;
+}
+
+.spanmsg {
+    color: white;
+    font-style: oblique;
+    font-weight: bolder;
+}
+
 .buscador {
     display: flex;
     flex-direction: row;
@@ -278,7 +311,8 @@ footer {
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    height: max-content;
+    height: auto;
+    padding: 10rem;
 }
 
 .mainCarrito {
@@ -675,6 +709,24 @@ header a:hover {
     background-color: bisque;
     border-radius: 5%;
 }
+
+/* mercado pago */
+
+#form-checkout {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    background-color: #ff4500;
+  }
+
+  .container {
+    height: 18px;
+    display: inline-block;
+    border: 1px solid rgb(118, 118, 118);
+    border-radius: 2px;
+    padding: 1px 2px;
+  }
+
 
 @media (min-width:350px) and (max-width:750px) {
     
